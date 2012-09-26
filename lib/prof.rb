@@ -13,13 +13,33 @@ class Nstring < BinData::Primitive
   def set(v); self.data = v; end
 end
 
-class Ary < BinData::Primitive
-  endian :little
-  uint32 :len, :value => lambda { :data.length }
-  array :data, :type => :type_t, :initial_length => :len
+class AchievementList < BinData::Primitive
+  uint32le :len
+  array :data, :initial_length => :len do
+    nstring :id
+    uint32le :_ # four null bytes - difficulty?
+  end
 
   def get; self.data; end
-  def set(v); self.data = v; end
+  def set(a); self.data = a; end
+end
+
+class HighScore < BinData::Record
+  endian :little
+
+  nstring :name
+  nstring :photo_id
+  uint32 :score
+  uint32 :sector
+  uint32 :win
+  uint32 :difficulty_
+end
+class ScoreList < BinData::Primitive
+  uint32le :len
+  array :data, :type => :high_score, :initial_length => :len
+
+  def get; self.data; end
+  def set(a); self.data = a; end
 end
 
 class CrewRecord < BinData::Record
@@ -37,27 +57,12 @@ class Gender < BinData::Record
                :choices => {0 => :int16be, 1 => :int16le}
 end
 
-class HighScore < BinData::Record
-  endian :little
-
-  nstring :name
-  nstring :photo_id
-  uint32 :score
-  uint32 :sector
-  uint32 :win
-  uint32 :difficulty_  
-end
-
 class Profile < BinData::Record
   endian :little
   
   uint32 :version_
   
-  uint32 :achievement_count
-  array :achievements, :initial_length => :achievement_count do
-    nstring :id
-    uint32 :_ # four null bytes - difficulty?
-  end
+  achievement_list :achievements
   
   uint32 :kestrel_cruiser
   uint32 :stealth_cruiser
@@ -75,11 +80,8 @@ class Profile < BinData::Record
     uint32 :_3
   end
   
-  uint32 :highscore_count
-  array :highscores, :type => :high_score, :initial_length => :highscore_count
-
-  uint32 :ship_highscore_count
-  array :ship_highscores, :type => :high_score, :initial_length => :ship_highscore_count  
+  score_list :highscores, :type => :high_score
+  score_list :ship_highscores, :type => :high_score
   
   uint32 :ships_defeated
   uint32 :total_ships_defeated
