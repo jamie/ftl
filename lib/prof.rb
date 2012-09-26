@@ -13,12 +13,23 @@ class Nstring < BinData::Primitive
   def set(v); self.data = v; end
 end
 
+class Difficulty < BinData::Primitive
+  DIFFICULTIES = ['easy', 'normal']
+  uint32le :data
+
+  def get; DIFFICULTIES[self.data]; end
+  def set(a); self.data = DIFFICULTIES.index(a); end
+end
+class Achievement < BinData::Primitive
+  nstring :id
+  difficulty :difficulty
+
+  def get; [self.id, self.difficulty]; end
+  def set(a); self.id = a[0]; self.difficulty = a[1]; end
+end
 class AchievementList < BinData::Primitive
   uint32le :len
-  array :data, :initial_length => :len do
-    nstring :id
-    uint32le :_ # four null bytes - difficulty?
-  end
+  array :data, :type => :achievement, :initial_length => :len
 
   def get; self.data; end
   def set(a); self.data = a; end
