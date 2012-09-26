@@ -1,9 +1,6 @@
 require 'rubygems'
-require 'isolate'
+require 'bundler/setup'
 
-Isolate.now! do
-  gem 'bindata'
-end
 require 'bindata'
 require 'pp'
 
