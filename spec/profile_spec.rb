@@ -20,6 +20,17 @@ describe Profile do
     ]
   end
 
+  it "loads ships" do
+    profile.ships.should == [
+      'kestrel',
+      'stealth',
+      'engi',
+      'federation',
+      'rock',
+      'zoltan',
+    ]
+  end
+
   it "serializes full save file" do
     Profile.new(
       'version' => 4,

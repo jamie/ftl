@@ -5,8 +5,7 @@ require 'bindata'
 require 'pp'
 
 class Nstring < BinData::Primitive
-  endian :little
-  uint32 :len, :value => lambda { data.length }
+  uint32le :len, :value => lambda { data.length }
   string :data, :read_length => :len
   
   def get; self.data; end
@@ -33,6 +32,18 @@ class AchievementList < BinData::Primitive
 
   def get; self.data; end
   def set(a); self.data = a; end
+end
+
+class ShipList < BinData::Primitive
+  FLAGS = %w(kestrel stealth mantis engi federation slug rock zoltan crystal)
+  array :data, :type => :uint32le, :initial_length => 9
+
+  def get
+    [FLAGS, self.data].transpose.select{|ship, unlocked| unlocked == 1}.map(&:first)
+  end
+  def set(a)
+    self.data = FLAGS.map{|ship| a.include?(ship) ? 1 : 0 }
+  end
 end
 
 class Score < BinData::Record
@@ -68,17 +79,8 @@ class Profile < BinData::Record
   uint32 :version
   
   achievement_list :achievements
-  
-  uint32 :kestrel_cruiser
-  uint32 :stealth_cruiser
-  uint32 :mantis_cruiser
-  uint32 :engi_cruiser
-  uint32 :federation_cruiser
-  uint32 :slug_cruiser
-  uint32 :rock_cruiser
-  uint32 :zoltan_cruiser
-  uint32 :crystal_cruiser
-  
+  ship_list :ships
+    
   struct :unknown do
     uint32 :_1
     uint32 :_2
