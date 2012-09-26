@@ -24,7 +24,7 @@ class AchievementList < BinData::Primitive
   def set(a); self.data = a; end
 end
 
-class HighScore < BinData::Record
+class Score < BinData::Record
   endian :little
 
   nstring :name
@@ -36,7 +36,7 @@ class HighScore < BinData::Record
 end
 class ScoreList < BinData::Primitive
   uint32le :len
-  array :data, :type => :high_score, :initial_length => :len
+  array :data, :type => :score, :initial_length => :len
 
   def get; self.data; end
   def set(a); self.data = a; end
@@ -94,11 +94,4 @@ class Profile < BinData::Record
   crew_record :piloted_evasions
   crew_record :jumps_survived
   crew_record :skill_masteries
-end
-
-if $0 == __FILE__
-  require 'yaml'
-  default_file = File.expand_path(YAML.load(File.read('config.yml'))['test_path']) + '/prof.sav'
-  file = File.open(ARGV.first || default_file)
-  pp Profile.read(file)
 end

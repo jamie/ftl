@@ -1,1 +1,3 @@
-test_path: ~/Library/Application Support/FasterThanLight
+win: "%USERPROFILE%\\My Documents\\My Games\\FasterThanLight"
+mac: ~/Library/Application Support/FasterThanLight
+lin: ~/.local/share/FasterThanLight
