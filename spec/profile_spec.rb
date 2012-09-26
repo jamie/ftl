@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe Profile do
   let(:profile) {
-    file = File.open('./spec/prof.sav')
-    Profile.read(file)
+    File.open('./spec/prof.sav') do |file|
+      Profile.read(file)
+    end
   }
   
   it "loads version" do
@@ -19,12 +20,15 @@ describe Profile do
     ]
   end
 
-  it "builds with a hash" do
-    p = Profile.new(
-      :version => 4,
-      :achievements => [['ACH_SECTOR_5', 'easy']]
-    )
-    p.version.should == 4
-    p.achievements.should == [['ACH_SECTOR_5', 'easy']]
+  it "serializes full save file" do
+    Profile.new(
+      'version' => 4,
+      'achievements' => [
+        ['ACH_SECTOR_5', 'easy'],
+        ['ACH_UNLOCK_ALL', 'normal'],
+        ['ACH_FULL_ARSENAL', 'easy'],
+        ['ACH_TOUGH_SHIP', 'easy']
+      ]
+    ).to_binary_s.should == File.read('./spec/prof.sav')
   end
 end
