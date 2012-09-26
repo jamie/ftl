@@ -51,16 +51,10 @@ class CrewRecord < BinData::Record
   uint32 :gender_
 end
 
-class Gender < BinData::Record
-  uint32le :e, :check_value => lambda { value == 0 or value == 1 }
-  choice :int, :selection => :e,
-               :choices => {0 => :int16be, 1 => :int16le}
-end
-
 class Profile < BinData::Record
   endian :little
   
-  uint32 :version_
+  uint32 :version
   
   achievement_list :achievements
   
@@ -80,8 +74,8 @@ class Profile < BinData::Record
     uint32 :_3
   end
   
-  score_list :highscores, :type => :high_score
-  score_list :ship_highscores, :type => :high_score
+  score_list :highscores
+  score_list :ship_highscores
   
   uint32 :ships_defeated
   uint32 :total_ships_defeated
