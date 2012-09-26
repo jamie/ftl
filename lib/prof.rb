@@ -4,9 +4,9 @@ require 'bundler/setup'
 require 'bindata'
 require 'pp'
 
-class Str < BinData::Primitive
+class Nstring < BinData::Primitive
   endian :little
-  uint32 :len, :value => lambda { :data.length }
+  uint32 :len, :value => lambda { data.length }
   string :data, :read_length => :len
   
   def get; self.data; end
@@ -26,21 +26,22 @@ class CrewRecord < BinData::Record
   endian :little
   
   uint32 :score
-  str :name
-  str :race
+  nstring :name
+  nstring :race
   uint32 :gender_
 end
 
-class Flag < BinData::Choice
-  uint32le 0
-  uint32le 1
+class Gender < BinData::Record
+  uint32le :e, :check_value => lambda { value == 0 or value == 1 }
+  choice :int, :selection => :e,
+               :choices => {0 => :int16be, 1 => :int16le}
 end
 
 class HighScore < BinData::Record
   endian :little
 
-  str :name
-  str :photo_id
+  nstring :name
+  nstring :photo_id
   uint32 :score
   uint32 :sector
   uint32 :win
@@ -54,21 +55,21 @@ class Profile < BinData::Record
   
   uint32 :achievement_count
   array :achievements, :initial_length => :achievement_count do
-    str :id
+    nstring :id
     uint32 :_ # four null bytes - difficulty?
   end
   
-  flag :kestrel_cruiser
-  flag :stealth_cruiser
-  flag :mantis_cruiser
-  flag :engi_cruiser
-  flag :federation_cruiser
-  flag :slug_cruiser
-  flag :rock_cruiser
-  flag :zoltan_cruiser
-  flag :crystal_cruiser
+  uint32 :kestrel_cruiser
+  uint32 :stealth_cruiser
+  uint32 :mantis_cruiser
+  uint32 :engi_cruiser
+  uint32 :federation_cruiser
+  uint32 :slug_cruiser
+  uint32 :rock_cruiser
+  uint32 :zoltan_cruiser
+  uint32 :crystal_cruiser
   
-  struct :flags do
+  struct :unknown do
     uint32 :_1
     uint32 :_2
     uint32 :_3
