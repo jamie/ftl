@@ -100,5 +100,9 @@ class Profile < BinData::Record
   crew_record :skill_masteries
 end
 
-file = File.open(ARGV.first)
-pp Profile.read(file)
+if $0 == __FILE__
+  require 'yaml'
+  default_file = File.expand_path(YAML.load(File.read('config.yml'))['test_path']) + '/prof.sav'
+  file = File.open(ARGV.first || default_file)
+  pp Profile.read(file)
+end
