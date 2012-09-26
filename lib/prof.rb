@@ -42,7 +42,7 @@ class ScoreList < BinData::Primitive
   def set(a); self.data = a; end
 end
 
-class CrewRecord < BinData::Record
+class CrewScore < BinData::Record
   endian :little
   
   uint32 :score
@@ -89,9 +89,9 @@ class Profile < BinData::Record
   uint32 :games_played
   uint32 :victories
   
-  crew_record :repairs
-  crew_record :combat_kills
-  crew_record :piloted_evasions
-  crew_record :jumps_survived
-  crew_record :skill_masteries
+  crew_score :repairs
+  crew_score :combat_kills
+  crew_score :piloted_evasions
+  crew_score :jumps_survived
+  crew_score :skill_masteries
 end
