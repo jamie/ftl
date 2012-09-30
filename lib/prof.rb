@@ -108,3 +108,78 @@ class Profile < BinData::Record
   crew_score :jumps_survived
   crew_score :skill_masteries
 end
+
+class SaveGame < BinData::Record
+  # Some info from https://github.com/arhimmel/FTLGameEditor/blob/master/main.py
+  # additional info from http://www.ftlgame.com/forum/viewtopic.php?f=4&t=2218&start=70
+  endian :little
+
+  uint32 :version
+  uint32 :difficulty
+
+  # Total stats for highscores
+  uint32 :ships_defeated
+  uint32 :jumps
+  uint32 :scrap_collected
+  uint32 :crew_recruited
+
+  nstring :ship_title
+  nstring :ship_info
+
+  uint32 :rando_stat_len
+  uint32 :rando_stat # wtf?
+
+  uint32 :stat_count
+  array :stats, :initial_length => :stat_count do
+    nstring :stat
+    uint32 :value
+  end
+
+  nstring :ship_title2
+  nstring :ship_info2
+
+  uint32 :crew_count
+  array :crew, :initial_length => :crew_count do
+    nstring :species
+    nstring :name
+  end
+
+  uint32 :ship_health
+  uint32 :fuel
+  uint32 :drone_parts
+  uint32 :missiles
+  uint32 :spare_parts # ?
+
+  uint32 :crew_count2
+  array :crew_stats, :initial_length => :crew_count2 do
+    nstring :name
+    nstring :species
+    uint32 :unknown # gender?
+    uint32 :health
+    uint32 :x_pos
+    uint32 :y_pos
+    uint32 :room
+    uint32 :room_tile
+    uint32 :unknown2
+    uint32 :piloting_skill
+    uint32 :engine_skill
+    uint32 :shield_skill
+    uint32 :weapon_skill
+    uint32 :repair_skill
+    uint32 :combat_skill
+    uint32 :gender
+    uint32 :stat_repair
+    uint32 :stat_combat
+    uint32 :stat_pilot_eva
+    uint32 :stat_jumps_survived
+    uint32 :stat_skill_masteries
+  end
+
+  unit32 :ship_power
+  uint32 :activated_systems # maybe?
+  uint32 :shield_power
+  uint32 :shield_damage
+  uint32 :shield_downtime
+
+  # There's more...
+end
