@@ -109,7 +109,7 @@ class Profile < BinData::Record
   crew_score :skill_masteries
 end
 
-class SaveGame < BinData::Record
+class Continue < BinData::Record
   # Some info from https://github.com/arhimmel/FTLGameEditor/blob/master/main.py
   # additional info from http://www.ftlgame.com/forum/viewtopic.php?f=4&t=2218&start=70
   endian :little
@@ -132,7 +132,7 @@ class SaveGame < BinData::Record
   uint32 :stat_count
   array :stats, :initial_length => :stat_count do
     nstring :stat
-    uint32 :value
+    uint32 :val
   end
 
   nstring :ship_title2
@@ -175,7 +175,7 @@ class SaveGame < BinData::Record
     uint32 :stat_skill_masteries
   end
 
-  unit32 :ship_power
+  uint32 :ship_power
   uint32 :activated_systems # maybe?
   uint32 :shield_power
   uint32 :shield_damage
