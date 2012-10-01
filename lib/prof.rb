@@ -118,16 +118,16 @@ class Continue < BinData::Record
   uint32 :difficulty
 
   # Total stats for highscores
-  uint32 :ships_defeated
-  uint32 :jumps
-  uint32 :scrap_collected
-  uint32 :crew_recruited
+  uint32 :total_ships_defeated
+  uint32 :total_beacons_explored
+  uint32 :total_scrap_collected
+  uint32 :total_crew_hired
 
   nstring :ship_title
   nstring :ship_info
 
-  uint32 :rando_stat_len
-  uint32 :rando_stat # wtf?
+  uint32 :unknown_3
+  uint32 :has_achievements # Maybe?
 
   uint32 :stat_count
   array :stats, :initial_length => :stat_count do
@@ -135,26 +135,28 @@ class Continue < BinData::Record
     uint32 :val
   end
 
-  nstring :ship_title2
   nstring :ship_info2
+  nstring :ship_title2
+  nstring :ship_graphic # ?
 
   uint32 :crew_count
-  array :crew, :initial_length => :crew_count do
-    nstring :species
+  array :initial_crew, :initial_length => :crew_count do
+    nstring :species # Internal. %w(human mantis energy ...)
     nstring :name
+    # Genderless, interesting
   end
 
-  uint32 :ship_health
+  uint32 :hull
   uint32 :fuel
   uint32 :drone_parts
   uint32 :missiles
-  uint32 :spare_parts # ?
+  uint32 :scrap
 
   uint32 :crew_count2
   array :crew_stats, :initial_length => :crew_count2 do
     nstring :name
     nstring :species
-    uint32 :unknown # gender?
+    uint32 :friend_or_foe
     uint32 :health
     uint32 :x_pos
     uint32 :y_pos
@@ -167,7 +169,7 @@ class Continue < BinData::Record
     uint32 :weapon_skill
     uint32 :repair_skill
     uint32 :combat_skill
-    uint32 :gender
+    uint32 :gender # 0 female, 1 male
     uint32 :stat_repair
     uint32 :stat_combat
     uint32 :stat_pilot_eva
@@ -181,5 +183,9 @@ class Continue < BinData::Record
   uint32 :shield_damage
   uint32 :shield_downtime
 
-  # There's more...
+  # ship data
+  # weapons data
+  # galaxy map
+  # more?
+
 end
